@@ -1,0 +1,44 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.vscode/
+.idea/
+
+# Mac
+.DS_Store
+
+# logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Editor directories and files
+*.sublime-workspace
+*.sublime-project
+
+# OS generated files
+Thumbs.db
+
+# static images folder (optional if you want to keep images out of git)
+# public/images/
