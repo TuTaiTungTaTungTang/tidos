@@ -12,10 +12,10 @@ const images = [
   // Left
   { position: [-1.75, 0, 0.25], rotation: [0, Math.PI / 2.5, 0], url: '/images/stars.jpg', title: 'Stars', description: 'A long-exposure capture of the night sky showing star trails circling across the heavens above a dark silhouette.' },
   { position: [-2.15, 0, 1.5], rotation: [0, Math.PI / 2.5, 0], url: '/images/sunday.jpg', title: 'Sunday', description: 'An atmospheric street scene on a quiet Sunday morning, empty sidewalks and soft light.' },
-  { position: [-2, 0, 2.75], rotation: [0, Math.PI / 2.5, 0], url: '/images/thumbnail.png', title: 'Thumbnail', description: 'A small preview-style image used as a tile or placeholder with bold contrast.' },
+  { position: [-2, 0, 2.75], rotation: [0, Math.PI / 2.5, 0], url: '/images/wave.jpg', title: 'Thumbnail', description: 'A small preview-style image used as a tile or placeholder with bold contrast.' },
   // Right
-  { position: [1.75, 0, 0.25], rotation: [0, -Math.PI / 2.5, 0], url: '/images/wave.jpg', title: 'Wave', description: 'A dramatic ocean wave crashing against rocky shorelines, frozen in motion with spray and texture.' },
-  { position: [2.15, 0, 1.5], rotation: [0, -Math.PI / 2.5, 0], url: pexel(911738), description: 'Minimal architectural interior with soft ambient light and clean lines.' },
-  { position: [2, 0, 2.75], rotation: [0, -Math.PI / 2.5, 0], url: pexel(1738986), description: 'A bold abstract facade composed of repeating geometric forms and high-contrast shadows.' }
+  { position: [1.75, 0, 0.25], rotation: [0, -Math.PI / 2.5, 0], url: '/images/child.jpeg', title: 'Child Drawing', description: 'A child crouched and drawing, surrounded by colorful scribbles—expressive and delicate.' },
+  { position: [2.15, 0, 1.5], rotation: [0, -Math.PI / 2.5, 0], url: '/images/lake.jpg', title: 'Venice Canal', description: 'A sunlit canal with gondolas and historic buildings—warm tones and painterly texture.' },
+  { position: [2, 0, 2.75], rotation: [0, -Math.PI / 2.5, 0], url: '/images/rainy.jpg', title: 'Colorful Park', description: 'An impressionistic park path with vivid leaves and reflective wet pavement.' }
 ]
 createRoot(document.getElementById('root')).render(<App images={images} />)
