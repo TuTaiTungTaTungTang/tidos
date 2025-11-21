@@ -147,7 +147,7 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
 
     easing.damp3(
       image.current.scale,
-      [0.85 * (!isActive && hovered ? 0.85 : 1), 0.9 * (!isActive && hovered ? 0.905 : 1), 1],
+      [0.945 * (!isActive && hovered ? 0.85 : 1), 0.94 * (!isActive && hovered ? 0.905 : 1), 1],
       0.1,
       dt
     )
@@ -164,7 +164,7 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
         position={[0, frameHeight / 2, 0]}>
         <boxGeometry />
         <meshStandardMaterial color="#151515" metalness={0.5} roughness={0.5} envMapIntensity={2} />
-        <mesh ref={frame} raycast={() => null} scale={[0.9, 0.93, 0.9]} position={[0, 0, 0.2]}>
+        <mesh ref={frame} raycast={() => null} scale={[0.94, 0.94, 0.9]} position={[0, 0, 0.2]}>
           <boxGeometry />
           <meshBasicMaterial toneMapped={false} fog={false} />
         </mesh>
