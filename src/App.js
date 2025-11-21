@@ -179,7 +179,7 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
 
     // Zoom = 1 để ảnh hiển thị 100% không crop
     if (image.current?.material) {
-      image.current.material.zoom = 1
+      image.current.material.zoom = 0.85
     }
 
     // Không set scale ở đây, để JSX scale điều khiển
