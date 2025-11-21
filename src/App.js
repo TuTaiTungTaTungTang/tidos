@@ -9,6 +9,8 @@ import getUuid from 'uuid-by-string'
 const GOLDENRATIO = 1.61803398875
 // Titles that should render in landscape orientation
 const LANDSCAPE_TITLES = new Set(['mountain', 'socrates', 'spring'])
+// Taller height for landscape frames (can tweak)
+const LANDSCAPE_HEIGHT = 1.25
 
 export const App = ({ images }) => (
   <Canvas dpr={[1, 1.5]} camera={{ fov: 70, position: [0, 2, 15] }}>
@@ -83,20 +85,62 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
   const lowerUrl = url.toLowerCase()
   // Determine orientation: explicit title match or url containing keywords
   const isLandscape = LANDSCAPE_TITLES.has(lowerTitle) || /mountain|socrates|spring/.test(lowerUrl)
+  // Frame dimensions and top edge based on orientation
+  const frameHeight = isLandscape ? LANDSCAPE_HEIGHT : GOLDENRATIO
+  const frameWidth = isLandscape ? GOLDENRATIO : 1
+  const topY = frameHeight
   useCursor(hovered)
+
+  //default
+
+  // useFrame((state, dt) => {
+  //   image.current.material.zoom = 2 + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) / 2
+  //   easing.damp3(image.current.scale, [0.85 * (!isActive && hovered ? 0.85 : 1), 0.9 * (!isActive && hovered ? 0.905 : 1), 1], 0.1, dt)
+  //   easing.dampC(frame.current.material.color, hovered ? 'orange' : 'white', 0.1, dt)
+  // })
+
+  //full ảnh k crop
+  // useFrame((state, dt) => {
+  //   if (!image.current || !frame.current) return
+  //   // Giữ zoom = 1 để thấy full ảnh
+  //   image.current.material.zoom = 1
+
+  //   easing.damp3(
+  //     image.current.scale,
+  //     [0.85 * (!isActive && hovered ? 0.85 : 1), 0.9 * (!isActive && hovered ? 0.905 : 1), 1],
+  //     0.1,
+  //     dt
+  //   )
+  //   easing.dampC(frame.current.material.color, hovered ? 'orange' : 'white', 0.1, dt)
+  // })
+
+  // có hiệu ứng thở 
   useFrame((state, dt) => {
-    image.current.material.zoom = 2 + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) / 2
-    easing.damp3(image.current.scale, [0.85 * (!isActive && hovered ? 0.85 : 1), 0.9 * (!isActive && hovered ? 0.905 : 1), 1], 0.1, dt)
+    if (!image.current || !frame.current) return
+
+    const baseZoom = 1 // full ảnh
+    const amplitude = 0.1 // dao động rất nhẹ
+
+    const targetZoom = baseZoom + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) * amplitude
+    easing.damp(image.current.material, 'zoom', targetZoom, 0.3, dt)
+
+    easing.damp3(
+      image.current.scale,
+      [0.85 * (!isActive && hovered ? 0.85 : 1), 0.9 * (!isActive && hovered ? 0.905 : 1), 1],
+      0.1,
+      dt
+    )
     easing.dampC(frame.current.material.color, hovered ? 'orange' : 'white', 0.1, dt)
   })
+
   return (
     <group {...props}>
       <mesh
         name={name}
         onPointerOver={(e) => (e.stopPropagation(), hover(true))}
         onPointerOut={() => hover(false)}
-        scale={isLandscape ? [GOLDENRATIO, 1, 0.05] : [1, GOLDENRATIO, 0.05]}
-        position={[0, isLandscape ? 0.5 : GOLDENRATIO / 2, 0]}>
+        scale={[frameWidth, frameHeight, 0.05]}
+        position={[0, frameHeight / 2, 0]}>
         <boxGeometry />
         <meshStandardMaterial color="#151515" metalness={0.5} roughness={0.5} envMapIntensity={2} />
         <mesh ref={frame} raycast={() => null} scale={[0.9, 0.93, 0.9]} position={[0, 0, 0.2]}>
@@ -108,29 +152,26 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
       {/* stacked text for a bolder title appearance; positions differ by orientation */}
       {isLandscape ? (
         <>
-          {/* Landscape: frame top is at y=1 (position 0.5 + height 0.5). Place title slightly above. */}
-          <Text maxWidth={0.2} anchorX="left" anchorY="top" position={[-(GOLDENRATIO / 2) + 0.05, 1.2, 0.001]} fontSize={0.028} color="#ffffff">
+          {/* Landscape: place title slightly above the top edge */}
+          <Text maxWidth={0.2} anchorX="left" anchorY="top" position={[-(GOLDENRATIO / 2) + 0.05, topY + 0.2, 0.001]} fontSize={0.028} color="#ffffff">
             {displayName}
           </Text>
           {description && (
-            // Landscape description: place above frame (top=1), below title
-            <Text maxWidth={0.3} anchorX="left" anchorY="top" position={[-(GOLDENRATIO / 2) + 0.05, 1.15, 0.001]} fontSize={0.02} color="#bdbdbd">
+            // Landscape description: place above frame, below title
+            <Text maxWidth={0.3} anchorX="left" anchorY="top" position={[-(GOLDENRATIO / 2) + 0.05, topY + 0.15, 0.001]} fontSize={0.02} color="#bdbdbd">
               {description}
             </Text>
           )}
         </>
       ) : (
         <>
-          {/* Portrait: frame top at y=GOLDENRATIO. Move title slightly above. */}
-          <Text maxWidth={0.12} anchorX="left" anchorY="top" position={[0.55, GOLDENRATIO + 0.06, 0.001]} fontSize={0.028} color="#ffffff">
-            {displayName}
-          </Text>
-          <Text maxWidth={0.12} anchorX="left" anchorY="top" position={[0.55, GOLDENRATIO + 0.06, 0]} fontSize={0.028} color="#ffffff">
+          {/* Portrait: place title slightly above the top edge */}
+          <Text maxWidth={0.12} anchorX="left" anchorY="top" position={[0.55, topY + 0.06, 0.001]} fontSize={0.028} color="#ffffff">
             {displayName}
           </Text>
           {description && (
-            // Portrait description: place above frame (top=GOLDENRATIO), below title
-            <Text maxWidth={0.22} anchorX="left" anchorY="top" position={[0.55, GOLDENRATIO + 0.02, 0.001]} fontSize={0.02} color="#bdbdbd">
+            // Portrait description: place above frame, below title
+            <Text maxWidth={0.22} anchorX="left" anchorY="top" position={[0.55, topY + 0.02, 0.001]} fontSize={0.02} color="#bdbdbd">
               {description}
             </Text>
           )}
