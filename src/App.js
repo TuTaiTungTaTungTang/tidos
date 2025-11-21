@@ -343,8 +343,7 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
       image.current.material.zoom = 1
     }
 
-    // Scale = 1 để giữ nguyên tỉ lệ
-    image.current.scale.set(1, 1, 1)
+    // Không set scale ở đây, để JSX scale điều khiển
   }, [gl, url, isLandscape])
 
   return (
@@ -359,11 +358,13 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
         {/* khung ngoài màu đen */}
         <meshStandardMaterial color="#151515" metalness={0.5} roughness={0.5} envMapIntensity={2} />
 
-        {/* Ảnh: zoom=1, scale trong useEffect điều khiển */}
+        {/* Ảnh: zoom=1, scale=1 để hiển thị đúng 100% */}
         <Image
           raycast={() => null}
           ref={image}
           position={[0, 0, 0.51]}
+          scale={[frameWidth, frameHeight, 1]}
+
           url={url}
         />
       </mesh>
