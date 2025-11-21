@@ -50,10 +50,10 @@ body {
 
 .intro-title {
   padding: 1em;
-  background-color: rgba(15, 35, 65, 0.75);;
-  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.45);
+  color: #a6beee;
   border-radius: 0.9em;
-  text-shadow: 2px 2px 0px #2323be, 4px 4px 0px rgba(0, 0, 0, 0.4);
+  text-shadow: 2px 2px 0px #4673ec, 4px 4px 0px rgba(131, 127, 127, 0.4);
   animation: fadeIn 2s ease-in, shadowPulse 2s infinite;
 }
 
@@ -64,7 +64,7 @@ body {
 
 .intro-description {
   background-color: rgba(15, 35, 65, 0.6);
-  color: #e4ebff;
+  color: #c6d0e2;
   padding: 1em;
   border-radius: 0.9em;
   width: 80%;
@@ -80,7 +80,7 @@ body {
 
 .intro-play-button {
   display: inline-block;
-  background-color: #2f8edc;
+  background-color: #325cce;
   color: #ffffff;
   border-radius: 0.9em;
   padding: 0.5em 1.5em;
