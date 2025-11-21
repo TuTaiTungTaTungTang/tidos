@@ -54,7 +54,7 @@ function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() })
       clicked.current.parent.updateWorldMatrix(true, true)
       // Center camera vertically based on the actual frame height
       const h = clicked.current.scale.y
-      clicked.current.parent.localToWorld(p.set(0, h / 2 + 0.3, 1.9))
+      clicked.current.parent.localToWorld(p.set(0, h / 2, 1.4))
       clicked.current.parent.getWorldQuaternion(q)
     } else {
       // Default center assumes enlarged portrait height
@@ -284,22 +284,69 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
   //   image.current.scale.set(1, 1, 1)
   // }, [gl, url, isLandscape])
 
+  ///1
+
+  // useEffect(() => {
+  //   const tex = image.current?.material?.map
+  //   if (!tex || !tex.image) return
+  //   console.log('Texture size', url, tex.image.width, tex.image.height)
+  //   const maxAniso = gl.capabilities.getMaxAnisotropy?.()
+  //   if (maxAniso) tex.anisotropy = maxAniso
+
+  //   tex.minFilter = THREE.LinearMipMapLinearFilter
+  //   tex.magFilter = THREE.LinearFilter
+  //   tex.generateMipmaps = true
+  //   tex.needsUpdate = true
+
+  //   if (image.current?.material) {
+  //     image.current.material.zoom = 1   // full ảnh
+  //   }
+  // }, [gl, url])
+
+
+  /// 2
   useEffect(() => {
     const tex = image.current?.material?.map
+    // if (!tex) return
     if (!tex || !tex.image) return
     console.log('Texture size', url, tex.image.width, tex.image.height)
+    // Anisotropic filtering cho độ nét tối đa
     const maxAniso = gl.capabilities.getMaxAnisotropy?.()
     if (maxAniso) tex.anisotropy = maxAniso
-
     tex.minFilter = THREE.LinearMipMapLinearFilter
     tex.magFilter = THREE.LinearFilter
     tex.generateMipmaps = true
     tex.needsUpdate = true
 
-    if (image.current?.material) {
-      image.current.material.zoom = 1   // full ảnh
+    const w = tex.image.width
+    const h = tex.image.height
+    const imageAspect = w / h
+
+    // Tính kích thước khung dựa trên base size và aspect ratio ảnh
+    const baseSize = isLandscape ? 1.8 : 2.0
+    let newWidth, newHeight
+
+    if (imageAspect >= 1) {
+      // Landscape: chiều rộng = baseSize, chiều cao = baseSize / aspect
+      newWidth = baseSize + 0.5
+      newHeight = baseSize / imageAspect + 0.5
+    } else {
+      // Portrait: chiều cao = baseSize, chiều rộng = baseSize * aspect
+      newHeight = baseSize
+      newWidth = baseSize * imageAspect
     }
-  }, [gl, url])
+
+    setFrameDimensions({ width: newWidth, height: newHeight })
+
+    // Zoom = 1 để ảnh hiển thị 100% không crop
+    if (image.current?.material) {
+      image.current.material.zoom = 1
+    }
+
+    // Scale = 1 để giữ nguyên tỉ lệ
+    image.current.scale.set(1, 1, 1)
+  }, [gl, url, isLandscape])
+
   return (
     <group {...props}>
       <mesh
