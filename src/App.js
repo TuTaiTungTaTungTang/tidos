@@ -373,21 +373,21 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
       {isLandscape ? (
         <>
           <Text
-            maxWidth={0.2}
+            maxWidth={1}
             anchorX="left"
             anchorY="top"
-            position={[-(GOLDENRATIO / 2) - 0.2, topY + 0.2, 0.01]}
-            fontSize={0.028}
+            position={[-(GOLDENRATIO / 2) - 1.7, topY + 1.2, 0]}
+            fontSize={0.1}
             color="#ffffff">
             {displayName}
           </Text>
           {description && (
             <Text
-              maxWidth={0.3}
+              maxWidth={3}
               anchorX="left"
               anchorY="top"
-              position={[-(GOLDENRATIO / 2) - 0.2, topY + 0.15, 0.01]}
-              fontSize={0.02}
+              position={[-(GOLDENRATIO / 2) - 1.7, topY + 1, 0]}
+              fontSize={0.05}
               color="#bdbdbd">
               {description}
             </Text>
@@ -396,21 +396,21 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
       ) : (
         <>
           <Text
-            maxWidth={0.12}
+            maxWidth={1}
             anchorX="left"
             anchorY="top"
-            position={[0.7, topY - 0.02, 0.001]}
-            fontSize={0.028}
+            position={[1, topY + 1, 0.01]}
+            fontSize={0.1}
             color="#ffffff">
             {displayName}
           </Text>
           {description && (
             <Text
-              maxWidth={0.22}
+              maxWidth={1}
               anchorX="left"
               anchorY="top"
-              position={[0.7, topY - 0.07, 0.001]}
-              fontSize={0.02}
+              position={[1, topY + 0.8, 0.01]}
+              fontSize={0.05}
               color="#bdbdbd">
               {description}
             </Text>
