@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { useEffect, useRef, useState } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useCursor, MeshReflectorMaterial, Image, Text, Environment } from '@react-three/drei'
 import { useRoute, useLocation } from 'wouter'
 import { easing } from 'maath'
@@ -9,8 +9,13 @@ import getUuid from 'uuid-by-string'
 const GOLDENRATIO = 1.61803398875
 // Titles that should render in landscape orientation
 const LANDSCAPE_TITLES = new Set(['mountain', 'socrates', 'spring'])
-// Taller height for landscape frames (can tweak)
+// Base landscape height (can tweak)
 const LANDSCAPE_HEIGHT = 1.25
+// Scaling factors for enlarging frames
+const LANDSCAPE_WIDTH_FACTOR = 1.3
+const LANDSCAPE_HEIGHT_FACTOR = 1.3
+const PORTRAIT_WIDTH_FACTOR = 1.3
+const PORTRAIT_HEIGHT_FACTOR = 1.06
 
 export const App = ({ images }) => (
   <Canvas dpr={[1, 1.5]} camera={{ fov: 70, position: [0, 2, 15] }}>
@@ -52,7 +57,7 @@ function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() })
       clicked.current.parent.localToWorld(p.set(0, h / 2, 1.25))
       clicked.current.parent.getWorldQuaternion(q)
     } else {
-      // Default center assumes portrait height
+      // Default center assumes enlarged portrait height
       p.set(0, 0, 5.5)
       q.identity()
     }
@@ -74,6 +79,8 @@ function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() })
 function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
   const image = useRef()
   const frame = useRef()
+  // useThree must be called at top-level, not inside effects
+  const { gl } = useThree()
   const [, params] = useRoute('/item/:id')
   const [hovered, hover] = useState(false)
   const [rnd] = useState(() => Math.random())
@@ -85,10 +92,11 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
   const lowerUrl = url.toLowerCase()
   // Determine orientation: explicit title match or url containing keywords
   const isLandscape = LANDSCAPE_TITLES.has(lowerTitle) || /mountain|socrates|spring/.test(lowerUrl)
-  // Frame dimensions and top edge based on orientation
-  const frameHeight = isLandscape ? LANDSCAPE_HEIGHT : GOLDENRATIO
-  const frameWidth = isLandscape ? GOLDENRATIO : 1
+  // Frame dimensions and top edge based on orientation (enlarged)
+  const frameHeight = isLandscape ? LANDSCAPE_HEIGHT * LANDSCAPE_HEIGHT_FACTOR : GOLDENRATIO * PORTRAIT_HEIGHT_FACTOR
+  const frameWidth = isLandscape ? GOLDENRATIO * LANDSCAPE_WIDTH_FACTOR : 1 * PORTRAIT_WIDTH_FACTOR
   const topY = frameHeight
+
   useCursor(hovered)
 
   //default
@@ -114,12 +122,25 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
   //   easing.dampC(frame.current.material.color, hovered ? 'orange' : 'white', 0.1, dt)
   // })
 
-  // có hiệu ứng thở 
+  // Sharpen texture once loaded (anisotropy + filters for clarity)
+  useEffect(() => {
+    const mat = image.current?.material
+    const tex = mat?.map
+    if (tex) {
+      const maxAniso = gl.capabilities.getMaxAnisotropy?.() || 8
+      tex.anisotropy = maxAniso
+      tex.minFilter = THREE.LinearMipMapLinearFilter
+      tex.magFilter = THREE.LinearFilter
+      tex.needsUpdate = true
+    }
+  }, [gl, url])
+
+  // // có hiệu ứng thở 
   useFrame((state, dt) => {
     if (!image.current || !frame.current) return
 
     const baseZoom = 1 // full ảnh
-    const amplitude = 0.1 // dao động rất nhẹ
+    const amplitude = 0.2 // dao động rất nhẹ
 
     const targetZoom = baseZoom + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) * amplitude
     easing.damp(image.current.material, 'zoom', targetZoom, 0.3, dt)
@@ -153,12 +174,12 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
       {isLandscape ? (
         <>
           {/* Landscape: place title slightly above the top edge */}
-          <Text maxWidth={0.2} anchorX="left" anchorY="top" position={[-(GOLDENRATIO / 2) + 0.05, topY + 0.2, 0.001]} fontSize={0.028} color="#ffffff">
+          <Text maxWidth={0.2} anchorX="left" anchorY="top" position={[-(GOLDENRATIO / 2) - 0.2, topY + 0.2, 0.01]} fontSize={0.028} color="#ffffff">
             {displayName}
           </Text>
           {description && (
             // Landscape description: place above frame, below title
-            <Text maxWidth={0.3} anchorX="left" anchorY="top" position={[-(GOLDENRATIO / 2) + 0.05, topY + 0.15, 0.001]} fontSize={0.02} color="#bdbdbd">
+            <Text maxWidth={0.3} anchorX="left" anchorY="top" position={[-(GOLDENRATIO / 2) - 0.2, topY + 0.15, 0.01]} fontSize={0.02} color="#bdbdbd">
               {description}
             </Text>
           )}
@@ -166,12 +187,12 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
       ) : (
         <>
           {/* Portrait: place title slightly above the top edge */}
-          <Text maxWidth={0.12} anchorX="left" anchorY="top" position={[0.55, topY + 0.06, 0.001]} fontSize={0.028} color="#ffffff">
+          <Text maxWidth={0.12} anchorX="left" anchorY="top" position={[0.7, topY - 0.02, 0.001]} fontSize={0.028} color="#ffffff">
             {displayName}
           </Text>
           {description && (
             // Portrait description: place above frame, below title
-            <Text maxWidth={0.22} anchorX="left" anchorY="top" position={[0.55, topY + 0.02, 0.001]} fontSize={0.02} color="#bdbdbd">
+            <Text maxWidth={0.22} anchorX="left" anchorY="top" position={[0.7, topY - 0.07, 0.001]} fontSize={0.02} color="#bdbdbd">
               {description}
             </Text>
           )}
