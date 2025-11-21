@@ -16,3 +16,125 @@ body {
   color: white;
   user-select: none;
 }
+
+/* Intro Screen Overlay */
+.intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background-color: rgba(0, 0, 0, 0.15);
+
+}
+
+.intro-content {
+  width: 40em;
+  position: relative;
+  text-align: center;
+  font-size: 1.2em;
+  border-radius: 0.9em;
+  overflow: visible;
+  animation: fadeInSlideUp 1s ease-out;
+}
+
+.intro-text {
+  padding: 2em 1em;
+  transform: translateY(-70px);
+}
+
+.intro-title {
+  padding: 1em;
+  background-color: rgba(15, 35, 65, 0.75);;
+  color: #ffffff;
+  border-radius: 0.9em;
+  text-shadow: 2px 2px 0px #2323be, 4px 4px 0px rgba(0, 0, 0, 0.4);
+  animation: fadeIn 2s ease-in, shadowPulse 2s infinite;
+}
+
+.intro-title h1 {
+  margin: 0;
+  font-size: 2.5em;
+}
+
+.intro-description {
+  background-color: rgba(15, 35, 65, 0.6);
+  color: #e4ebff;
+  padding: 1em;
+  border-radius: 0.9em;
+  width: 80%;
+  text-align: center;
+  margin: 1em auto;
+}
+
+.intro-description p {
+  font-size: 1.1em;
+  line-height: 1.6em;
+  margin: 0.5em 0;
+}
+
+.intro-play-button {
+  display: inline-block;
+  background-color: #2f8edc;
+  color: #ffffff;
+  border-radius: 0.9em;
+  padding: 0.5em 1.5em;
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  transition: all 0.4s;
+  cursor: pointer;
+  box-shadow: 0em 0.25em 0.75em rgba(124, 124, 124, 0.5);
+}
+
+.intro-play-button:hover {
+  background-color: #1e74b7;
+  transform: scale(1.05);
+}
+
+.intro-play-button p {
+  margin: 0;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shadowPulse {
+  0% {
+    text-shadow: 2px 2px 0px #2323be, 4px 4px 0px rgba(0, 0, 0, 0.4);
+  }
+  100% {
+    text-shadow: 4px 4px 0px #2323be, 8px 8px 0px rgba(0, 0, 0, 0.4);
+  }
+}
+
+@keyframes panBg {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 0%;
+  }
+}
