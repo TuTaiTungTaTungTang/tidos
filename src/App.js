@@ -359,12 +359,11 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
         {/* khung ngoài màu đen */}
         <meshStandardMaterial color="#151515" metalness={0.5} roughness={0.5} envMapIntensity={2} />
 
-        {/* Ảnh: không animation, không scale động */}
+        {/* Ảnh: zoom=1, scale trong useEffect điều khiển */}
         <Image
           raycast={() => null}
           ref={image}
           position={[0, 0, 0.51]}
-          scale={[frameWidth * 0.98, frameHeight * 0.98, 1]} // fit gần full khung
           url={url}
         />
       </mesh>
