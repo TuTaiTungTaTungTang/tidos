@@ -13,7 +13,7 @@ const LANDSCAPE_TITLES = new Set(['mountain', 'socrates', 'spring'])
 const LANDSCAPE_HEIGHT = 1.25
 // Scaling factors for enlarging frames
 const LANDSCAPE_WIDTH_FACTOR = 1.3
-const LANDSCAPE_HEIGHT_FACTOR = 1.3
+const LANDSCAPE_HEIGHT_FACTOR = 1.5
 const PORTRAIT_WIDTH_FACTOR = 1.3
 const PORTRAIT_HEIGHT_FACTOR = 1.06
 
@@ -54,11 +54,11 @@ function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() })
       clicked.current.parent.updateWorldMatrix(true, true)
       // Center camera vertically based on the actual frame height
       const h = clicked.current.scale.y
-      clicked.current.parent.localToWorld(p.set(0, h / 2, 1.25))
+      clicked.current.parent.localToWorld(p.set(0, h / 2 + 0.3, 1.9))
       clicked.current.parent.getWorldQuaternion(q)
     } else {
       // Default center assumes enlarged portrait height
-      p.set(0, 0, 7)
+      p.set(0, 0.5, 11)
       q.identity()
     }
   })
@@ -243,48 +243,63 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
   useCursor(hovered)
 
   // Tính kích thước khung từ aspect ratio ảnh thực + tăng độ nét
+  // useEffect(() => {
+  //   const tex = image.current?.material?.map
+  //   if (!tex) return
+
+  //   // Anisotropic filtering cho độ nét tối đa
+  //   const maxAniso = gl.capabilities.getMaxAnisotropy?.()
+  //   if (maxAniso) tex.anisotropy = maxAniso
+  //   tex.minFilter = THREE.LinearMipMapLinearFilter
+  //   tex.magFilter = THREE.LinearFilter
+  //   tex.generateMipmaps = true
+  //   tex.needsUpdate = true
+
+  //   const w = tex.image.width
+  //   const h = tex.image.height
+  //   const imageAspect = w / h
+
+  //   // Tính kích thước khung dựa trên base size và aspect ratio ảnh
+  //   const baseSize = isLandscape ? 1.8 : 2.0
+  //   let newWidth, newHeight
+
+  //   if (imageAspect >= 1) {
+  //     // Landscape: chiều rộng = baseSize, chiều cao = baseSize / aspect
+  //     newWidth = baseSize
+  //     newHeight = baseSize / imageAspect
+  //   } else {
+  //     // Portrait: chiều cao = baseSize, chiều rộng = baseSize * aspect
+  //     newHeight = baseSize
+  //     newWidth = baseSize * imageAspect
+  //   }
+
+  //   setFrameDimensions({ width: newWidth, height: newHeight })
+
+  //   // Zoom = 1 để ảnh hiển thị 100% không crop
+  //   if (image.current?.material) {
+  //     image.current.material.zoom = 1
+  //   }
+
+  //   // Scale = 1 để giữ nguyên tỉ lệ
+  //   image.current.scale.set(1, 1, 1)
+  // }, [gl, url, isLandscape])
+
   useEffect(() => {
     const tex = image.current?.material?.map
-    if (!tex) return
-
-    // Anisotropic filtering cho độ nét tối đa
+    if (!tex || !tex.image) return
+    console.log('Texture size', url, tex.image.width, tex.image.height)
     const maxAniso = gl.capabilities.getMaxAnisotropy?.()
     if (maxAniso) tex.anisotropy = maxAniso
+
     tex.minFilter = THREE.LinearMipMapLinearFilter
     tex.magFilter = THREE.LinearFilter
     tex.generateMipmaps = true
     tex.needsUpdate = true
 
-    const w = tex.image.width
-    const h = tex.image.height
-    const imageAspect = w / h
-
-    // Tính kích thước khung dựa trên base size và aspect ratio ảnh
-    const baseSize = isLandscape ? 1.8 : 2.0
-    let newWidth, newHeight
-
-    if (imageAspect >= 1) {
-      // Landscape: chiều rộng = baseSize, chiều cao = baseSize / aspect
-      newWidth = baseSize
-      newHeight = baseSize / imageAspect
-    } else {
-      // Portrait: chiều cao = baseSize, chiều rộng = baseSize * aspect
-      newHeight = baseSize
-      newWidth = baseSize * imageAspect
-    }
-
-    setFrameDimensions({ width: newWidth, height: newHeight })
-
-    // Zoom = 1 để ảnh hiển thị 100% không crop
     if (image.current?.material) {
-      image.current.material.zoom = 1
+      image.current.material.zoom = 1   // full ảnh
     }
-
-    // Scale = 1 để giữ nguyên tỉ lệ
-    image.current.scale.set(1, 1, 1)
-  }, [gl, url, isLandscape])
-
-
+  }, [gl, url])
   return (
     <group {...props}>
       <mesh
