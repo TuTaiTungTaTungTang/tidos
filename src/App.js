@@ -58,7 +58,7 @@ function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() })
       clicked.current.parent.getWorldQuaternion(q)
     } else {
       // Default center assumes enlarged portrait height
-      p.set(0, 0.5, 11.5)
+      p.set(0, 0.5, 12)
       q.identity()
     }
   })
