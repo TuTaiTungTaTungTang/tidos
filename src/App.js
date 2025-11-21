@@ -217,7 +217,7 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
             maxWidth={1}
             anchorX="left"
             anchorY="top"
-            position={[-(GOLDENRATIO / 2) - 2.3, topY + 1.6, 0]}
+            position={[-(GOLDENRATIO / 2) - 2, topY + 1, 0.1]}
             fontSize={0.1}
             color="#ffffff">
             {displayName}
@@ -227,7 +227,7 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
               maxWidth={3}
               anchorX="left"
               anchorY="top"
-              position={[-(GOLDENRATIO / 2) - 2.3, topY + 1.4, 0]}
+              position={[-(GOLDENRATIO / 2) - 2, topY + 0.8, 0.1]}
               fontSize={0.05}
               color="#bdbdbd">
               {description}
