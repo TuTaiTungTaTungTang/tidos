@@ -56,7 +56,8 @@ export const App = ({ images }) => {
   }
 
   return (
-    <Canvas dpr={[1, 1.5]} camera={{ fov: 70, position: [0, 2, 15] }}>
+    <Canvas dpr={[1, 2]} camera={{ fov: 70, position: [0, 2, 15] }}
+      gl={{ antialias: true }} >
       <color attach="background" args={['#191920']} />
       <fog attach="fog" args={['#191920', 0, 15]} />
       <group position={[0, -0.5, 0]}>
@@ -93,11 +94,11 @@ function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() })
       clicked.current.parent.updateWorldMatrix(true, true)
       // Center camera vertically based on the actual frame height
       const h = clicked.current.scale.y
-      clicked.current.parent.localToWorld(p.set(0, h / 2 + 0.5, 2.5))
+      clicked.current.parent.localToWorld(p.set(0, h / 2 + 0.92, 3.2))
       clicked.current.parent.getWorldQuaternion(q)
     } else {
       // Default center assumes enlarged portrait height
-      p.set(0, 1, 10)
+      p.set(0, 1.5, 12)
       q.identity()
     }
   })
@@ -155,6 +156,7 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
     tex.minFilter = THREE.LinearMipMapLinearFilter
     tex.magFilter = THREE.LinearFilter
     tex.generateMipmaps = true
+    tex.colorSpace = THREE.SRGBColorSpace
     tex.needsUpdate = true
 
     const w = tex.image.width
@@ -162,13 +164,13 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
     const imageAspect = w / h
 
     // Tính kích thước khung dựa trên base size và aspect ratio ảnh
-    const baseSize = isLandscape ? 1.8 : 2.0
+    const baseSize = isLandscape ? 2 : 2.5
     let newWidth, newHeight
 
     if (imageAspect >= 1) {
       // Landscape: chiều rộng = baseSize, chiều cao = baseSize / aspect
       newWidth = baseSize + 0.5
-      newHeight = baseSize / imageAspect + 0.5
+      newHeight = baseSize / imageAspect + 0.8
     } else {
       // Portrait: chiều cao = baseSize, chiều rộng = baseSize * aspect
       newHeight = baseSize
@@ -179,7 +181,7 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
 
     // Zoom = 1 để ảnh hiển thị 100% không crop
     if (image.current?.material) {
-      image.current.material.zoom = 0.85
+      image.current.material.zoom = 0.7
     }
 
     // Không set scale ở đây, để JSX scale điều khiển
@@ -215,7 +217,7 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
             maxWidth={1}
             anchorX="left"
             anchorY="top"
-            position={[-(GOLDENRATIO / 2) - 1.7, topY + 1.2, 0]}
+            position={[-(GOLDENRATIO / 2) - 2.3, topY + 1.6, 0]}
             fontSize={0.1}
             color="#ffffff">
             {displayName}
@@ -225,7 +227,7 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
               maxWidth={3}
               anchorX="left"
               anchorY="top"
-              position={[-(GOLDENRATIO / 2) - 1.7, topY + 1, 0]}
+              position={[-(GOLDENRATIO / 2) - 2.3, topY + 1.4, 0]}
               fontSize={0.05}
               color="#bdbdbd">
               {description}
@@ -238,9 +240,9 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
             maxWidth={1}
             anchorX="left"
             anchorY="top"
-            position={[1, topY + 1, 0.01]}
+            position={[-1.2, topY + 1.6, 0.1]}
             fontSize={0.1}
-            color="#ffffff">
+            color="#2e2d2dff">
             {displayName}
           </Text>
           {description && (
@@ -248,9 +250,9 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
               maxWidth={1}
               anchorX="left"
               anchorY="top"
-              position={[1, topY + 0.8, 0.01]}
+              position={[-1.2, topY + 1.4, 0.1]}
               fontSize={0.05}
-              color="#bdbdbd">
+              color="#4e4d4dff">
               {description}
             </Text>
           )}
