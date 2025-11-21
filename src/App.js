@@ -54,7 +54,7 @@ function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() })
       clicked.current.parent.updateWorldMatrix(true, true)
       // Center camera vertically based on the actual frame height
       const h = clicked.current.scale.y
-      clicked.current.parent.localToWorld(p.set(0, h / 2 + 0.08, 1.4))
+      clicked.current.parent.localToWorld(p.set(0, h / 2, 1.25))
       clicked.current.parent.getWorldQuaternion(q)
     } else {
       // Default center assumes enlarged portrait height
