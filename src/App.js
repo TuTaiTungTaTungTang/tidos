@@ -7,6 +7,8 @@ import { easing } from 'maath'
 import getUuid from 'uuid-by-string'
 
 const GOLDENRATIO = 1.61803398875
+// Titles that should render in landscape orientation
+const LANDSCAPE_TITLES = new Set(['mountain', 'socrates', 'spring'])
 
 export const App = ({ images }) => (
   <Canvas dpr={[1, 1.5]} camera={{ fov: 70, position: [0, 2, 15] }}>
@@ -43,9 +45,12 @@ function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() })
     clicked.current = ref.current.getObjectByName(params?.id)
     if (clicked.current) {
       clicked.current.parent.updateWorldMatrix(true, true)
-      clicked.current.parent.localToWorld(p.set(0, GOLDENRATIO / 2, 1.25))
+      // Center camera vertically based on the actual frame height
+      const h = clicked.current.scale.y
+      clicked.current.parent.localToWorld(p.set(0, h / 2, 1.25))
       clicked.current.parent.getWorldQuaternion(q)
     } else {
+      // Default center assumes portrait height
       p.set(0, 0, 5.5)
       q.identity()
     }
@@ -74,6 +79,10 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
   // Display a friendly title if provided, otherwise fall back to the uuid-based name
   const displayName = title ? title : name.split('-').join(' ')
   const isActive = params?.id === name
+  const lowerTitle = title ? title.toLowerCase() : ''
+  const lowerUrl = url.toLowerCase()
+  // Determine orientation: explicit title match or url containing keywords
+  const isLandscape = LANDSCAPE_TITLES.has(lowerTitle) || /mountain|socrates|spring/.test(lowerUrl)
   useCursor(hovered)
   useFrame((state, dt) => {
     image.current.material.zoom = 2 + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) / 2
@@ -86,8 +95,8 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
         name={name}
         onPointerOver={(e) => (e.stopPropagation(), hover(true))}
         onPointerOut={() => hover(false)}
-        scale={[1, GOLDENRATIO, 0.05]}
-        position={[0, GOLDENRATIO / 2, 0]}>
+        scale={isLandscape ? [GOLDENRATIO, 1, 0.05] : [1, GOLDENRATIO, 0.05]}
+        position={[0, isLandscape ? 0.5 : GOLDENRATIO / 2, 0]}>
         <boxGeometry />
         <meshStandardMaterial color="#151515" metalness={0.5} roughness={0.5} envMapIntensity={2} />
         <mesh ref={frame} raycast={() => null} scale={[0.9, 0.93, 0.9]} position={[0, 0, 0.2]}>
@@ -96,18 +105,36 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
         </mesh>
         <Image raycast={() => null} ref={image} position={[0, 0, 0.7]} url={url} />
       </mesh>
-      {/* stacked text for a bolder title appearance */}
-      <Text maxWidth={0.12} anchorX="left" anchorY="top" position={[0.55, GOLDENRATIO, 0.001]} fontSize={0.028} color="#ffffff">
-        {displayName}
-      </Text>
-      <Text maxWidth={0.12} anchorX="left" anchorY="top" position={[0.55, GOLDENRATIO, 0]} fontSize={0.028} color="#ffffff">
-        {displayName}
-      </Text>
-
-      {description && (
-        <Text maxWidth={0.22} anchorX="left" anchorY="top" position={[0.55, GOLDENRATIO - 0.08, 0]} fontSize={0.02} color="#bdbdbd">
-          {description}
-        </Text>
+      {/* stacked text for a bolder title appearance; positions differ by orientation */}
+      {isLandscape ? (
+        <>
+          {/* Landscape: frame top is at y=1 (position 0.5 + height 0.5). Place title slightly above. */}
+          <Text maxWidth={0.2} anchorX="left" anchorY="top" position={[-(GOLDENRATIO / 2) + 0.05, 1.2, 0.001]} fontSize={0.028} color="#ffffff">
+            {displayName}
+          </Text>
+          {description && (
+            // Landscape description: place above frame (top=1), below title
+            <Text maxWidth={0.3} anchorX="left" anchorY="top" position={[-(GOLDENRATIO / 2) + 0.05, 1.15, 0.001]} fontSize={0.02} color="#bdbdbd">
+              {description}
+            </Text>
+          )}
+        </>
+      ) : (
+        <>
+          {/* Portrait: frame top at y=GOLDENRATIO. Move title slightly above. */}
+          <Text maxWidth={0.12} anchorX="left" anchorY="top" position={[0.55, GOLDENRATIO + 0.06, 0.001]} fontSize={0.028} color="#ffffff">
+            {displayName}
+          </Text>
+          <Text maxWidth={0.12} anchorX="left" anchorY="top" position={[0.55, GOLDENRATIO + 0.06, 0]} fontSize={0.028} color="#ffffff">
+            {displayName}
+          </Text>
+          {description && (
+            // Portrait description: place above frame (top=GOLDENRATIO), below title
+            <Text maxWidth={0.22} anchorX="left" anchorY="top" position={[0.55, GOLDENRATIO + 0.02, 0.001]} fontSize={0.02} color="#bdbdbd">
+              {description}
+            </Text>
+          )}
+        </>
       )}
     </group>
   )
