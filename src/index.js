@@ -7,13 +7,13 @@ const images = [
   // Front
   { position: [0, 0, 1.5], rotation: [0, 0, 0], url: 'img/2.jpg', title: 'Mountain', description: 'A misty mountain landscape with soft light filtering through the clouds, showing layered ridges and distant peaks.' },
   // Back
-  { position: [-1.5, 0, -0.6], rotation: [0, 0, 0], url: '/images/socrates.jpg', title: 'Socrates', description: 'A portrait study capturing a thoughtful, introspective expression with moody lighting and textured background.' },
-  { position: [1.5, 0, -0.6], rotation: [0, 0, 0], url: '/images/spring.jpg', title: 'Spring', description: 'A gentle scene of early spring blossoms in pastel hues, soft depth of field and delicate petals.' },
+  { position: [-1.6, 0, -0.6], rotation: [0, 0, 0], url: 'img/3.jpg', title: 'Socrates', description: 'A portrait study capturing a thoughtful, introspective expression with moody lighting and textured background.' },
+  { position: [1.55, 0, -0.6], rotation: [0, 0, 0], url: 'img/7.jpg', title: 'Spring', description: 'A gentle scene of early spring blossoms in pastel hues, soft depth of field and delicate petals.' },
   // Left
   { position: [-2.3, 0, 1.3], rotation: [0, Math.PI / 2.5, 0], url: 'img/1.jpg', title: 'Stars', description: 'A long-exposure capture of the night sky showing star trails circling across the heavens above a dark silhouette.' },
-  { position: [-2, 0, 3.1], rotation: [0, Math.PI / 2.5, 0], url: '/images/wave.jpg', title: 'Thumbnail', description: 'A small preview-style image used as a tile or placeholder with bold contrast.' },
+  { position: [-2, 0, 3.1], rotation: [0, Math.PI / 2.5, 0], url: '/img/4.jpg', title: 'Thumbnail', description: 'A small preview-style image used as a tile or placeholder with bold contrast.' },
   // Right
-  { position: [2.3, 0, 1.3], rotation: [0, -Math.PI / 2.5, 0], url: '/images/child.jpeg', title: 'Child Drawing', description: 'A child crouched and drawing, surrounded by colorful scribbles—expressive and delicate.' },
-  { position: [2, 0, 3.1], rotation: [0, -Math.PI / 2.5, 0], url: '/images/rainy.jpg', title: 'ColorfulPark', description: 'An impressionistic park path with vivid leaves and reflective wet pavement.' }
+  { position: [2.3, 0, 1.3], rotation: [0, -Math.PI / 2.5, 0], url: 'img/5.jpg', title: 'Child Drawing', description: 'A child crouched and drawing, surrounded by colorful scribbles—expressive and delicate.' },
+  { position: [2, 0, 3.1], rotation: [0, -Math.PI / 2.5, 0], url: 'img/6.jpg', title: 'ColorfulPark', description: 'An impressionistic park path with vivid leaves and reflective wet pavement.' }
 ]
 createRoot(document.getElementById('root')).render(<App images={images} />)
