@@ -21,9 +21,7 @@ const PORTRAIT_HEIGHT_FACTOR = 1.06
 function LoadingScreen() {
   return (
     <div className="loading-overlay" style={{
-      backgroundImage: 'url(img/loading.jpg)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center'
+      backgroundImage: 'url(img/intro.jpg)', backgroundSize: 'contain', backgroundPosition: 'center'
     }}>
       <div className="loading-content">
         <div className="loading-spinner"></div>
@@ -38,10 +36,7 @@ function LoadingScreen() {
 function IntroScreen({ onStart }) {
   return (
     <div className="intro-overlay" style={{
-      backgroundImage: 'url(img/intro.jpg)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
+      backgroundImage: 'url(img/intro.jpg)', backgroundSize: 'contain', backgroundPosition: 'center'
     }}>
       <div className="intro-content">
         <div className="intro-text">
@@ -69,14 +64,12 @@ function IntroScreen({ onStart }) {
 }
 
 export const App = ({ images }) => {
-  const [showIntro, setShowIntro] = useState(true)
+  const [location, setLocation] = useLocation()
+  const [showIntro, setShowIntro] = useState(() => {
+    // Chỉ show intro nếu đang ở trang chủ '/', không show nếu đang ở /item/...
+    return location === '/'
+  })
   const [isLoading, setIsLoading] = useState(false)
-  const [, setLocation] = useLocation()
-
-  // Reset về trang chủ khi reload/F5
-  useEffect(() => {
-    setLocation('/')
-  }, [])
 
   const handleStartGallery = () => {
     setShowIntro(false)

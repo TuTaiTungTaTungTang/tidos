@@ -29,8 +29,7 @@ body {
   align-items: center;
   justify-content: center;
   font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-    background-color: rgba(0, 0, 0, 0.15);
-
+  background-color: #191920;
 }
 
 .intro-content {
