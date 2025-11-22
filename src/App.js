@@ -38,7 +38,10 @@ function LoadingScreen() {
 function IntroScreen({ onStart }) {
   return (
     <div className="intro-overlay" style={{
-      backgroundImage: 'url(img/intro.jpg)', backgroundSize: 'contain', backgroundPosition: 'center'
+      backgroundImage: 'url(img/intro.jpg)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
     }}>
       <div className="intro-content">
         <div className="intro-text">
