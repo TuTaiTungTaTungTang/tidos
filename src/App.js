@@ -68,6 +68,12 @@ function IntroScreen({ onStart }) {
 export const App = ({ images }) => {
   const [showIntro, setShowIntro] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
+  const [, setLocation] = useLocation()
+
+  // Reset về trang chủ khi reload/F5
+  useEffect(() => {
+    setLocation('/')
+  }, [])
 
   const handleStartGallery = () => {
     setShowIntro(false)
