@@ -153,6 +153,7 @@ function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() })
   )
 }
 
+
 // function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
 //   const image = useRef()
 //   const { gl } = useThree()
@@ -162,17 +163,9 @@ function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() })
 
 //   const displayName = title ? title : name.split('-').join(' ')
 //   const isActive = params?.id === name
-//   const lowerTitle = title ? title.toLowerCase() : ''
-//   const lowerUrl = url.toLowerCase()
 
-//   // Xác định ảnh ngang / dọc
-//   const isLandscape = LANDSCAPE_TITLES.has(lowerTitle) || /mountain|socrates|spring/.test(lowerUrl)
-
-//   // State để lưu kích thước khung dựa trên tỉ lệ ảnh thực
-//   const [frameDimensions, setFrameDimensions] = useState({
-//     width: isLandscape ? GOLDENRATIO * LANDSCAPE_WIDTH_FACTOR : 1 * PORTRAIT_WIDTH_FACTOR,
-//     height: isLandscape ? LANDSCAPE_HEIGHT * LANDSCAPE_HEIGHT_FACTOR : GOLDENRATIO * PORTRAIT_HEIGHT_FACTOR
-//   })
+//   const [frameDimensions, setFrameDimensions] = useState({ width: 2, height: 3 })
+//   const [imageDimensions, setImageDimensions] = useState({ width: 2, height: 3 })
 
 //   const frameWidth = frameDimensions.width
 //   const frameHeight = frameDimensions.height
@@ -180,14 +173,10 @@ function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() })
 
 //   useCursor(hovered)
 
-
-//   /// 2
 //   useEffect(() => {
 //     const tex = image.current?.material?.map
-//     // if (!tex) return
 //     if (!tex || !tex.image) return
-//     console.log('Texture size', url, tex.image.width, tex.image.height)
-//     // Anisotropic filtering cho độ nét tối đa
+
 //     const maxAniso = gl.capabilities.getMaxAnisotropy?.()
 //     if (maxAniso) tex.anisotropy = maxAniso
 //     tex.minFilter = THREE.LinearMipMapLinearFilter
@@ -198,123 +187,100 @@ function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() })
 
 //     const w = tex.image.width
 //     const h = tex.image.height
-//     const imageAspect = w / h
+//     const aspect = w / h            // Tỉ lệ thật của ảnh
 
-//     // Tính kích thước khung dựa trên base size và aspect ratio ảnh
-//     const baseSize = isLandscape ? 2 : 2.5
-//     let newWidth, newHeight
+//     const longEdge = 2.5            // Chiều cạnh dài mong muốn (đơn vị world)
 
-//     if (imageAspect >= 1) {
-//       // Landscape: chiều rộng = baseSize, chiều cao = baseSize / aspect
-//       newWidth = baseSize + 0.5
-//       newHeight = baseSize / imageAspect + 0.8
+//     let imgW, imgH
+//     if (aspect >= 1) {
+//       // Ảnh ngang: cạnh dài là chiều ngang
+//       imgW = longEdge
+//       imgH = longEdge / aspect
 //     } else {
-//       // Portrait: chiều cao = baseSize, chiều rộng = baseSize * aspect
-//       newHeight = baseSize
-//       newWidth = baseSize * imageAspect
+//       // Ảnh dọc: cạnh dài là chiều dọc
+//       imgH = longEdge
+//       imgW = longEdge * aspect
 //     }
 
-//     setFrameDimensions({ width: newWidth, height: newHeight })
+//     // Ảnh: đúng tỉ lệ gốc
+//     setImageDimensions({ width: imgW, height: imgH })
+//     // Khung: to hơn ảnh một chút để tạo viền
+//     const frameScale = 1.08
+//     setFrameDimensions({ width: imgW * frameScale, height: imgH * frameScale })
 
-//     // Zoom = 1 để ảnh hiển thị 100% không crop
+//     // Không zoom để khỏi crop
 //     if (image.current?.material) {
-//       image.current.material.zoom = 0.7
+//       image.current.material.zoom = 1
 //     }
-
-//     // Không set scale ở đây, để JSX scale điều khiển
-//   }, [gl, url, isLandscape])
+//   }, [gl, url])
 
 //   return (
 //     <group {...props}>
+//       {/* KHUNG (box) */}
 //       <mesh
 //         name={name}
 //         onPointerOver={(e) => (e.stopPropagation(), hover(true))}
 //         onPointerOut={() => hover(false)}
 //         scale={[frameWidth, frameHeight, 0.05]}
-//         position={[0, frameHeight / 2, 0]}>
+//         position={[0, frameHeight / 2, 0]}
+//       >
 //         <boxGeometry />
-//         {/* khung ngoài màu đen */}
-//         <meshStandardMaterial color="#151515" metalness={0.5} roughness={0.5} envMapIntensity={2} />
-
-//         {/* Ảnh: zoom=1, scale=1 để hiển thị đúng 100% */}
-//         <Image
-//           raycast={() => null}
-//           ref={image}
-//           position={[0, 0, 0.51]}
-//           scale={[frameWidth, frameHeight, 1]}
-
-//           url={url}
+//         <meshStandardMaterial
+//           color="#151515"
+//           metalness={0.5}
+//           roughness={0.5}
+//           envMapIntensity={2}
 //         />
 //       </mesh>
 
-//       {/* Text như cũ */}
-//       {isLandscape ? (
-//         <>
-//           <Text
-//             maxWidth={1}
-//             anchorX="left"
-//             anchorY="top"
-//             position={[-(GOLDENRATIO / 2) - 2, topY + 1, 0.1]}
-//             fontSize={0.1}
-//             color="#ffffff">
-//             {displayName}
-//           </Text>
-//           {description && (
-//             <Text
-//               maxWidth={3}
-//               anchorX="left"
-//               anchorY="top"
-//               position={[-(GOLDENRATIO / 2) - 2, topY + 0.8, 0.1]}
-//               fontSize={0.05}
-//               color="#bdbdbd">
-//               {description}
-//             </Text>
-//           )}
-//         </>
-//       ) : (
-//         <>
-//           <Text
-//             maxWidth={1}
-//             anchorX="left"
-//             anchorY="top"
-//             position={[-1.2, topY + 1.6, 0.1]}
-//             fontSize={0.1}
-//             color="#2e2d2dff">
-//             {displayName}
-//           </Text>
-//           {description && (
-//             <Text
-//               maxWidth={1}
-//               anchorX="left"
-//               anchorY="top"
-//               position={[-1.2, topY + 1.4, 0.1]}
-//               fontSize={0.05}
-//               color="#4e4d4dff">
-//               {description}
-//             </Text>
-//           )}
-//         </>
+//       {/* ẢNH – tỉ lệ y như gốc, không crop */}
+//       <Image
+//         raycast={() => null}
+//         ref={image}
+//         position={[0, frameHeight / 2, 0.051]}
+//         scale={[imageDimensions.width, imageDimensions.height, 1]}
+//         url={url}
+//       />
+
+//       {/* Text như cũ, chỉ chỉnh lại theo frameHeight */}
+//       <Text
+//         maxWidth={frameWidth * 0.9}
+//         anchorX="left"
+//         anchorY="top"
+//         position={[-frameWidth / 2, topY + 0.4, 0.1]}
+//         fontSize={0.1}
+//         color="#ffffff"
+//       >
+//         {displayName}
+//       </Text>
+//       {description && (
+//         <Text
+//           maxWidth={frameWidth * 1.2}
+//           anchorX="left"
+//           anchorY="top"
+//           position={[-frameWidth / 2, topY + 0.2, 0.1]}
+//           fontSize={0.05}
+//           color="#bdbdbd"
+//         >
+//           {description}
+//         </Text>
 //       )}
 //     </group>
 //   )
 // }
 
-function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
+function Frame({ url, title, description, ...props }) {
   const image = useRef()
   const { gl } = useThree()
   const [, params] = useRoute('/item/:id')
   const [hovered, hover] = useState(false)
   const name = getUuid(url)
 
-  const displayName = title ? title : name.split('-').join(' ')
+  const displayName = title || name
   const isActive = params?.id === name
 
-  const [frameDimensions, setFrameDimensions] = useState({ width: 2, height: 3 })
   const [imageDimensions, setImageDimensions] = useState({ width: 2, height: 3 })
-
-  const frameWidth = frameDimensions.width
-  const frameHeight = frameDimensions.height
-  const topY = frameHeight
+  const topY = imageDimensions.height
 
   useCursor(hovered)
 
@@ -324,6 +290,7 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
 
     const maxAniso = gl.capabilities.getMaxAnisotropy?.()
     if (maxAniso) tex.anisotropy = maxAniso
+
     tex.minFilter = THREE.LinearMipMapLinearFilter
     tex.magFilter = THREE.LinearFilter
     tex.generateMipmaps = true
@@ -332,28 +299,21 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
 
     const w = tex.image.width
     const h = tex.image.height
-    const aspect = w / h            // Tỉ lệ thật của ảnh
+    const aspect = w / h
 
-    const longEdge = 2.5            // Chiều cạnh dài mong muốn (đơn vị world)
+    const longEdge = 3
 
     let imgW, imgH
     if (aspect >= 1) {
-      // Ảnh ngang: cạnh dài là chiều ngang
       imgW = longEdge
       imgH = longEdge / aspect
     } else {
-      // Ảnh dọc: cạnh dài là chiều dọc
       imgH = longEdge
       imgW = longEdge * aspect
     }
 
-    // Ảnh: đúng tỉ lệ gốc
     setImageDimensions({ width: imgW, height: imgH })
-    // Khung: to hơn ảnh một chút để tạo viền
-    const frameScale = 1.08
-    setFrameDimensions({ width: imgW * frameScale, height: imgH * frameScale })
 
-    // Không zoom để khỏi crop
     if (image.current?.material) {
       image.current.material.zoom = 1
     }
@@ -361,49 +321,34 @@ function Frame({ url, title, description, c = new THREE.Color(), ...props }) {
 
   return (
     <group {...props}>
-      {/* KHUNG (box) */}
-      <mesh
-        name={name}
+      {/* ẢNH — thêm name để route nhận diện được */}
+      <Image
+        ref={image}
+        name={name}                        // 👈 QUAN TRỌNG
+        url={url}
+        position={[0, imageDimensions.height / 2, 0]}
+        scale={[imageDimensions.width, imageDimensions.height, 1]}
         onPointerOver={(e) => (e.stopPropagation(), hover(true))}
         onPointerOut={() => hover(false)}
-        scale={[frameWidth, frameHeight, 0.05]}
-        position={[0, frameHeight / 2, 0]}
-      >
-        <boxGeometry />
-        <meshStandardMaterial
-          color="#151515"
-          metalness={0.5}
-          roughness={0.5}
-          envMapIntensity={2}
-        />
-      </mesh>
-
-      {/* ẢNH – tỉ lệ y như gốc, không crop */}
-      <Image
-        raycast={() => null}
-        ref={image}
-        position={[0, frameHeight / 2, 0.051]}
-        scale={[imageDimensions.width, imageDimensions.height, 1]}
-        url={url}
       />
 
-      {/* Text như cũ, chỉ chỉnh lại theo frameHeight */}
       <Text
-        maxWidth={frameWidth * 0.9}
+        maxWidth={imageDimensions.width * 1.1}
         anchorX="left"
         anchorY="top"
-        position={[-frameWidth / 2, topY + 0.4, 0.1]}
+        position={[-imageDimensions.width / 2, topY + 0.4, 0.1]}
         fontSize={0.1}
         color="#ffffff"
       >
         {displayName}
       </Text>
+
       {description && (
         <Text
-          maxWidth={frameWidth * 1.2}
+          maxWidth={imageDimensions.width * 1.1}
           anchorX="left"
           anchorY="top"
-          position={[-frameWidth / 2, topY + 0.2, 0.1]}
+          position={[-imageDimensions.width / 2, topY + 0.2, 0.1]}
           fontSize={0.05}
           color="#bdbdbd"
         >
