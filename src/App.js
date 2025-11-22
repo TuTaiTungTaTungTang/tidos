@@ -61,7 +61,7 @@ function IntroScreen({ onStart }) {
             />
             <p style={{ fontStyle: 'italic', marginTop: '1em' }}>
               Quét mã để tải App <br />
-              Scan ảnh để có trải nghiệm AR.
+              Scan ảnh để có trải nghiệm AR tốt nhất.
             </p>
 
           </div>
