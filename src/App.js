@@ -332,13 +332,13 @@ function Frame({ url, title, description, ...props }) {
         onPointerOut={() => hover(false)}
       />
 
-      <Text
+      {/* <Text
         maxWidth={imageDimensions.width * 1.1}
         anchorX="left"
         anchorY="top"
         position={[-imageDimensions.width / 2 + 0.15, topY - 0.15, 0.1]}
         fontSize={0.05}
-        color="#686464ff"
+        color="#353333ff"
       >
         {displayName}
       </Text>
@@ -351,6 +351,37 @@ function Frame({ url, title, description, ...props }) {
           position={[-imageDimensions.width / 2 + 0.15, topY - 0.23, 0.1]}
           fontSize={0.035}
           color="#bdbdbd"
+        >
+          {description}
+        </Text>
+      )} */}
+      {/* Title */}
+      <Text
+        maxWidth={imageDimensions.width * 1.1}
+        anchorX="left"
+        anchorY="top"
+        position={[-imageDimensions.width / 2 + 0.15, topY - 0.15, 0.1]} // đặt HẲN lên trên ảnh
+        fontSize={0.05}
+        color="#ffffff"
+        depthTest={false}
+        outlineWidth={0.001}
+        outlineColor="#000000"
+      >
+        {displayName}
+      </Text>
+
+      {/* Description */}
+      {description && (
+        <Text
+          maxWidth={0.9}
+          anchorX="left"
+          anchorY="top"
+          position={[-imageDimensions.width / 2 + 0.15, topY - 0.23, 0.1]}
+          fontSize={0.035}
+          color="#dddddd"
+          depthTest={false}
+          outlineWidth={0.001}
+          outlineColor="#000000"
         >
           {description}
         </Text>
