@@ -54,10 +54,16 @@ function IntroScreen({ onStart }) {
               Khám phá không gian ảo với những kiệt tác nghệ thuật,<br />
               tìm hiểu về nét đẹp và ý nghĩa của từng tác phẩm.
             </p>
+            <img
+              src="img/qr-code.png"
+              alt="QR Code"
+              style={{ width: "80px", height: "80px" }}
+            />
             <p style={{ fontStyle: 'italic', marginTop: '1em' }}>
-              Được phát triển bởi Tidos với niềm đam mê<br />
-              mang nghệ thuật đến cuộc sống thông qua công nghệ.
+              Quét mã để tải App <br />
+              Scan ảnh để có trãi nghiệm AR.
             </p>
+
           </div>
           <div className="intro-play-button" onClick={onStart}>
             <p>KHÁM PHÁ NGAY</p>
