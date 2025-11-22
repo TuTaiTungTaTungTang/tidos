@@ -8,7 +8,7 @@ import getUuid from 'uuid-by-string'
 
 const GOLDENRATIO = 1.61803398875
 // Titles that should render in landscape orientation
-const LANDSCAPE_TITLES = new Set(['mountain', 'socrates', 'spring'])
+const LANDSCAPE_TITLES = new Set(['GỌNG KÌM TÂM TRÍ', 'socrates', 'THIÊN THẦN BỊ KẾT ÁN'])
 // Base landscape height (can tweak)
 const LANDSCAPE_HEIGHT = 1.25
 // Scaling factors for enlarging frames
@@ -27,7 +27,7 @@ function LoadingScreen() {
     }}>
       <div className="loading-content">
         <div className="loading-spinner"></div>
-        <h2>Đang tải triển lãm...</h2>
+        <h2>Đang vào triển lãm...</h2>
         <p>Vui lòng đợi trong giây lát</p>
       </div>
     </div>
@@ -373,7 +373,7 @@ function Frame({ url, title, description, ...props }) {
       {/* Description */}
       {description && (
         <Text
-          maxWidth={0.9}
+          maxWidth={0.7}
           anchorX="left"
           anchorY="top"
           position={[-imageDimensions.width / 2 + 0.15, topY - 0.23, 0.1]}
