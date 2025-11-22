@@ -7,8 +7,8 @@ const images = [
   // Front
   { position: [0, 0, 2], rotation: [0, 0, 0], url: 'img/2.jpg', title: 'Mountain', description: 'A misty mountain landscape with soft light filtering through the clouds, showing layered ridges and distant peaks.' },
   // Back
-  { position: [-3, 0, 1], rotation: [0, 0, 0], url: 'img/3.jpg', title: 'Socrates', description: 'A portrait study capturing a thoughtful, introspective expression with moody lighting and textured background.' },
-  { position: [3, 0, 1], rotation: [0, 0, 0], url: 'img/7.jpg', title: 'Spring', description: 'A gentle scene of early spring blossoms in pastel hues, soft depth of field and delicate petals.' },
+  { position: [-3, 0, 0], rotation: [0, 0, 0], url: 'img/3.jpg', title: 'Socrates', description: 'A portrait study capturing a thoughtful, introspective expression with moody lighting and textured background.' },
+  { position: [3, 0, 0], rotation: [0, 0, 0], url: 'img/7.jpg', title: 'Spring', description: 'A gentle scene of early spring blossoms in pastel hues, soft depth of field and delicate petals.' },
   // Left
   { position: [-2.7, 0, 3], rotation: [0, Math.PI / 2.5, 0], url: 'img/4.jpg', title: 'Stars', description: 'A long-exposure capture of the night sky showing star trails circling across the heavens above a dark silhouette.' },
   { position: [-2.5, 0, 5.7], rotation: [0, Math.PI / 2.5, 0], url: '/img/1.jpg', title: 'Thumbnail', description: 'A small preview-style image used as a tile or placeholder with bold contrast.' },

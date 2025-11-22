@@ -135,7 +135,7 @@ function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() })
       clicked.current.parent.getWorldQuaternion(q)
     } else {
       // Default center assumes enlarged portrait height
-      p.set(0, 1, 10)
+      p.set(0, 1, 8.5)
       q.identity()
     }
   })
@@ -324,7 +324,7 @@ function Frame({ url, title, description, ...props }) {
       {/* ẢNH — thêm name để route nhận diện được */}
       <Image
         ref={image}
-        name={name}                        // 👈 QUAN TRỌNG
+        name={name}
         url={url}
         position={[0, imageDimensions.height / 2, 0]}
         scale={[imageDimensions.width, imageDimensions.height, 1]}
@@ -336,20 +336,20 @@ function Frame({ url, title, description, ...props }) {
         maxWidth={imageDimensions.width * 1.1}
         anchorX="left"
         anchorY="top"
-        position={[-imageDimensions.width / 2, topY + 0.4, 0.1]}
-        fontSize={0.1}
-        color="#ffffff"
+        position={[-imageDimensions.width / 2 + 0.15, topY - 0.15, 0.1]}
+        fontSize={0.05}
+        color="#686464ff"
       >
         {displayName}
       </Text>
 
       {description && (
         <Text
-          maxWidth={imageDimensions.width * 1.1}
+          maxWidth={0.9}
           anchorX="left"
           anchorY="top"
-          position={[-imageDimensions.width / 2, topY + 0.2, 0.1]}
-          fontSize={0.05}
+          position={[-imageDimensions.width / 2 + 0.15, topY - 0.23, 0.1]}
+          fontSize={0.035}
           color="#bdbdbd"
         >
           {description}
