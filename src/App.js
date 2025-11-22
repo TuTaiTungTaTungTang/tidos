@@ -21,7 +21,9 @@ const PORTRAIT_HEIGHT_FACTOR = 1.06
 function LoadingScreen() {
   return (
     <div className="loading-overlay" style={{
-      backgroundImage: 'url(img/intro.jpg)', backgroundSize: 'contain', backgroundPosition: 'center'
+      backgroundImage: 'url(img/loading.jpg)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
     }}>
       <div className="loading-content">
         <div className="loading-spinner"></div>
