@@ -67,11 +67,15 @@ function IntroScreen({ onStart }) {
 
 export const App = ({ images }) => {
   const [location, setLocation] = useLocation()
-  const [showIntro, setShowIntro] = useState(() => {
-    // Chỉ show intro nếu đang ở trang chủ '/', không show nếu đang ở /item/...
-    return location === '/'
-  })
+  const [showIntro, setShowIntro] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
+
+  // Reset về trang chủ khi reload/F5
+  useEffect(() => {
+    if (location.startsWith('/item/')) {
+      setLocation('/')
+    }
+  }, [])
 
   const handleStartGallery = () => {
     setShowIntro(false)
@@ -360,7 +364,7 @@ function Frame({ url, title, description, ...props }) {
         maxWidth={imageDimensions.width * 1.1}
         anchorX="left"
         anchorY="top"
-        position={[-imageDimensions.width / 2 + 0.15, topY - 0.15, 0.1]} // đặt HẲN lên trên ảnh
+        position={[-imageDimensions.width / 2 + 0.12, topY - 0.11, 0.1]} // đặt HẲN lên trên ảnh
         fontSize={0.05}
         color="#ffffff"
         depthTest={false}
@@ -373,10 +377,10 @@ function Frame({ url, title, description, ...props }) {
       {/* Description */}
       {description && (
         <Text
-          maxWidth={0.7}
+          maxWidth={0.75}
           anchorX="left"
           anchorY="top"
-          position={[-imageDimensions.width / 2 + 0.15, topY - 0.23, 0.1]}
+          position={[-imageDimensions.width / 2 + 0.12, topY - 0.18, 0.1]}
           fontSize={0.035}
           color="#dddddd"
           depthTest={false}
