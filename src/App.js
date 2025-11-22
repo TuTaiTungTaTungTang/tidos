@@ -135,7 +135,7 @@ function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() })
       clicked.current.parent.getWorldQuaternion(q)
     } else {
       // Default center assumes enlarged portrait height
-      p.set(0, 1.5, 12)
+      p.set(0, 1, 10)
       q.identity()
     }
   })
