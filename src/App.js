@@ -66,20 +66,16 @@ function IntroScreen({ onStart }) {
 }
 
 export const App = ({ images }) => {
-  const [location] = useLocation()
-  const [showIntro, setShowIntro] = useState(() => {
-    // Chỉ show intro nếu đang ở trang chủ '/', không show nếu đang ở /item/...
-    return !location.startsWith('/item/')
-  })
+  const [location, setLocation] = useLocation()
+  const [showIntro, setShowIntro] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
 
-  // Ẩn intro nếu reload khi đang ở /item/...
+  // Reset về trang chủ khi reload/F5
   useEffect(() => {
     if (location.startsWith('/item/')) {
-      setShowIntro(false)
-      setIsLoading(false)
+      setLocation('/')
     }
-  }, [location])
+  }, [])
 
   const handleStartGallery = () => {
     setShowIntro(false)
