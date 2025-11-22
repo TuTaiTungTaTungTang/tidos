@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, Suspense } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useCursor, MeshReflectorMaterial, Image, Text, Environment } from '@react-three/drei'
 import { useRoute, useLocation } from 'wouter'
@@ -16,6 +16,23 @@ const LANDSCAPE_WIDTH_FACTOR = 1.3
 const LANDSCAPE_HEIGHT_FACTOR = 1.5
 const PORTRAIT_WIDTH_FACTOR = 1.3
 const PORTRAIT_HEIGHT_FACTOR = 1.06
+
+// Loading Screen Component
+function LoadingScreen() {
+  return (
+    <div className="loading-overlay" style={{
+      backgroundImage: 'url(img/loading.jpg)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }}>
+      <div className="loading-content">
+        <div className="loading-spinner"></div>
+        <h2>Đang tải triển lãm...</h2>
+        <p>Vui lòng đợi trong giây lát</p>
+      </div>
+    </div>
+  )
+}
 
 // Intro Screen Component
 function IntroScreen({ onStart }) {
@@ -50,9 +67,23 @@ function IntroScreen({ onStart }) {
 
 export const App = ({ images }) => {
   const [showIntro, setShowIntro] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleStartGallery = () => {
+    setShowIntro(false)
+    setIsLoading(true)
+    // Simulate loading time
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 5000)
+  }
 
   if (showIntro) {
-    return <IntroScreen onStart={() => setShowIntro(false)} />
+    return <IntroScreen onStart={handleStartGallery} />
+  }
+
+  if (isLoading) {
+    return <LoadingScreen />
   }
 
   return (
@@ -60,25 +91,27 @@ export const App = ({ images }) => {
       gl={{ antialias: true }} >
       <color attach="background" args={['#191920']} />
       <fog attach="fog" args={['#191920', 0, 15]} />
-      <group position={[0, -0.5, 0]}>
-        <Frames images={images} />
-        <mesh rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[50, 50]} />
-          <MeshReflectorMaterial
-            blur={[300, 100]}
-            resolution={2048}
-            mixBlur={1}
-            mixStrength={80}
-            roughness={1}
-            depthScale={1.2}
-            minDepthThreshold={0.4}
-            maxDepthThreshold={1.4}
-            color="#050505"
-            metalness={0.5}
-          />
-        </mesh>
-      </group>
-      <Environment preset="city" />
+      <Suspense fallback={null}>
+        <group position={[0, -0.5, 0]}>
+          <Frames images={images} />
+          <mesh rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[50, 50]} />
+            <MeshReflectorMaterial
+              blur={[300, 100]}
+              resolution={2048}
+              mixBlur={1}
+              mixStrength={80}
+              roughness={1}
+              depthScale={1.2}
+              minDepthThreshold={0.4}
+              maxDepthThreshold={1.4}
+              color="#050505"
+              metalness={0.5}
+            />
+          </mesh>
+        </group>
+        <Environment preset="city" />
+      </Suspense>
     </Canvas>
   )
 }
